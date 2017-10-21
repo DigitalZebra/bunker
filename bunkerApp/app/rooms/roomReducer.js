@@ -1,53 +1,14 @@
 import _ from 'lodash'
 import Immutable from 'seamless-immutable'
 import {makeReducer} from '../config/reduxTools'
+import {reduceMessage, reduceMessages} from './messages/messageReducer'
 
 const INITIAL_STATE = Immutable({
 	rooms: null,
 	currentBunkerUser: null
-})
+});
+
 const reducer = {}
-
-const isSameDay = (message, previousMessage) => {
-	const currMessageDate = new Date(message.createdAt);
-
-	if (!previousMessage) {
-		return false;
-	}
-
-	const prevMessageDate = new Date(previousMessage.createdAt);
-	return currMessageDate.toDateString() === prevMessageDate.toDateString();
-};
-
-// This method assumes that the previous message was reduced first
-const reduceMessage = (user, message, previousMessage) => {
-
-	// full author object is populated sometimes, we just want ID.
-	message.author = _.isString(message.author) ? message.author : message.author && message.author._id;
-
-	message.isCurrentUser = message.author && message.author.toLowerCase() === user._id.toLowerCase();
-
-	message.isFirstInRun = true;
-
-	if (previousMessage && previousMessage.author && previousMessage.author.toLowerCase() === message.author.toLowerCase()) {
-		message.isFirstInRun = false;
-	}
-
-	message.isSameDay = isSameDay(message, previousMessage);
-
-	return message;
-};
-
-const reduceMessages = (user, messages) => {
-	const newMessagesArray = [];
-
-	// walk the messages list in reverse, reducing as we go.
-	for (let i = messages.length - 1; i >= 0; i--) {
-		newMessagesArray[i] = reduceMessage(user, messages[i], newMessagesArray[i + 1]);
-	}
-
-	return newMessagesArray;
-};
 
 reducer['socketio-init'] = (state, {rooms, user}) => {
 	rooms.forEach((room) => {
@@ -87,11 +48,15 @@ reducer['room/messagesFetched'] = (state, {roomId, messages}) => {
 
 	messages = reduceMessages(state.currentBunkerUser, messages);
 
+	let $messages = messages;
+
 	// this is goofy but we have to replace the last message of the original list to make various variables correct,
 	// then merge everything together.
-	const $messages = [...room.$messages.slice(0, room.$messages.length - 1),
-		_.extend({}, reduceMessage(state.currentBunkerUser, room.$messages[room.$messages.length - 1], messages[0])),
-		...messages];
+	if (room.$messages.length) {
+		$messages = [...room.$messages.slice(0, room.$messages.length - 1),
+			_.extend({}, reduceMessage(state.currentBunkerUser, room.$messages[room.$messages.length - 1], messages[0])),
+			...messages];
+	}
 
 	return state.setIn(['rooms', roomId, '$messages'], $messages);
 };

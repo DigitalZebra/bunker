@@ -1,10 +1,9 @@
 import React from 'react'
 import {FlatList, KeyboardAvoidingView, StyleSheet, View, TextInput, Button} from 'react-native'
 import {connect} from 'react-redux'
-import BunkerMessage from './BunkerMessage'
+import BunkerMessage from './messages/BunkerMessage'
 import MessageToolbar from './MessageToolbar'
-import {loadMessages} from './messageThunks'
-import _ from 'lodash'
+import {loadMessages} from './messages/messageThunks'
 
 class RoomScreen extends React.PureComponent {
 

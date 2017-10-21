@@ -4,6 +4,23 @@ import {removeBunkerSession} from './BunkerSessionStore'
 
 const serverUri = `http://localhost:9002`
 
+// returns true if bunker session can be restored and is still valid. False otherwise.
+async function _restoreAndValidateSession() {
+	// TODO: this is what should be done to restore bunker cookie from async storage. However, doesn't work
+	// because of issues with react-native cookies (or some other reason).
+	//
+	// const restoreResult = await this.bunkerSessionStore.restoreBunkerSession();
+	//
+	// if (!restoreResult) {
+	// 	console.log('no session was restored.');
+	// 	return false;
+	// }
+
+	const validateCookieResult = await validateSessionCookie();
+
+	return validateCookieResult;
+}
+
 // Copied from https://github.com/devfd/react-native-google-signin/blob/master/example/index.ios.js
 // Sign a user in to google, and then to bunker. Returns the authenticated user.
 export async function managerSignIn() {
@@ -13,10 +30,15 @@ export async function managerSignIn() {
 }
 
 // returns true if user successfully signed out. throws otherwise.
-async function logUserOutOfApp() {
+export async function logUserOutOfApp() {
 	await GoogleSignin.revokeAccess();
 	await signOut();
 	return true;
+}
+
+export async function signOut() {
+	await removeBunkerSession();
+	await GoogleSignin.signOut();
 }
 
 // Determines if a user is already signed in to the app via Google. If user is already signed in, checks to
@@ -53,26 +75,4 @@ export async function setupGoogleSignin() {
 	catch (err) {
 		return {user: null, error: true};
 	}
-}
-
-// returns true if bunker session can be restored and is still valid. False otherwise.
-async function _restoreAndValidateSession() {
-	// TODO: this is what should be done to restore bunker cookie from async storage. However, doesn't work
-	// because of issues with react-native cookies (or some other reason).
-	//
-	// const restoreResult = await this.bunkerSessionStore.restoreBunkerSession();
-	//
-	// if (!restoreResult) {
-	// 	console.log('no session was restored.');
-	// 	return false;
-	// }
-
-	const validateCookieResult = await validateSessionCookie();
-
-	return validateCookieResult;
-}
-
-async function signOut() {
-	await removeBunkerSession();
-	await GoogleSignin.signOut();
 }

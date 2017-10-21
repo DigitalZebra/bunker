@@ -1,12 +1,31 @@
-import {StackNavigator, addNavigationHelpers} from "react-navigation"
+import {StackNavigator, TabNavigator, addNavigationHelpers} from "react-navigation"
 import React from 'react'
+import {View, Text} from 'react-native'
 import {connect} from 'react-redux'
 import LoginScreen from '../user/LoginScreen'
 import RoomScreen from '../rooms/RoomScreen'
 import RoomSelector from '../rooms/RoomSelector'
+import SettingsScreen from './SettingsScreen'
+
+const HomePageTabNavigator = TabNavigator({
+	MainTab: {
+		screen: RoomSelector,
+		navigationOptions: {
+			title: 'Rooms',
+			tabBarLabel: 'Rooms'
+		}
+	},
+	SettingsTab: {
+		screen: SettingsScreen,
+		navigationOptions: {
+			title: 'Settings',
+			tabBarLabel: 'Settings'
+		}
+	}
+});
 
 export const AppNavigator = StackNavigator({
-	Rooms: {screen: RoomSelector},
+	Root: {screen: HomePageTabNavigator},
 	Room: {screen: RoomScreen},
 	Login: {screen: LoginScreen}
 }, {

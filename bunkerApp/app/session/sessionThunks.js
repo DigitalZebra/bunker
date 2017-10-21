@@ -1,5 +1,5 @@
 import {login} from '../user/userReducer'
-import {managerSignIn, setupGoogleSignin} from './BunkerSessionManager'
+import {managerSignIn, setupGoogleSignin, signOut} from './BunkerSessionManager'
 import {getBunkerSessionCookie, saveBunkerSession} from './BunkerSessionStore'
 import {connectToServer, sendSocketIoMessage} from './socketio'
 
@@ -42,4 +42,10 @@ export const fetchInitData = dispatch => {
 		.then(initialData => {
 			dispatch({type:'socketio-init', ...initialData})
 		})
-}
+};
+
+export const signUserOut = async (dispatch) => {
+	await signOut();
+	// TODO: dispatch signout action.
+	dispatch({});
+};

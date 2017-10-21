@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View, TextInput, Button} from 'react-native'
 import {connect} from 'react-redux'
-import {sendMessage} from './messageThunks'
+import {sendMessage} from './messages/messageThunks'
 
 class MessageBox extends React.PureComponent {
 

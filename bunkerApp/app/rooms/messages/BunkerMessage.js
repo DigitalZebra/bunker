@@ -1,5 +1,4 @@
 import React from 'react'
-import _ from 'lodash'
 import Day from './Day';
 import {StyleSheet, View, Text, Image} from 'react-native'
 

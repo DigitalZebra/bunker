@@ -1,5 +1,5 @@
-import {sendSocketIoMessage} from '../session/socketio'
-import {messagesFetched} from './roomReducer';
+import {sendSocketIoMessage} from '../../session/socketio'
+import {messagesFetched} from '../roomReducer';
 
 export const sendMessage = (roomId, message) => (dispatch) => {
 	return sendSocketIoMessage('/room/message', { roomId, text: message })
