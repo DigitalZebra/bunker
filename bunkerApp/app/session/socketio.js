@@ -45,6 +45,13 @@ export const connectToServer = (cookie, cookieHeader) => async (dispatch) => {
 	});
 }
 
+export const disconnectFromServer = () => {
+	if (socket) {
+		socket.close();
+		socket = null;
+	}
+};
+
 export async function sendSocketIoMessage(route, message) {
 	message = message || {}
 	return new Promise(resolve => socket.emit(route, message, resolve))

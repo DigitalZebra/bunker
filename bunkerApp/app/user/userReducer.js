@@ -18,4 +18,8 @@ reducer['socketio-init'] = (state, {userSettings, users, user}) => {
 	return state.merge({userSettings, users: _.keyBy(users, '_id'), currentBunkerUser: user})
 }
 
+reducer['user/signOut'] = (state) => {
+	return state.merge({loggedInUser: null, currentBunkerUser: null, userSettings: null});
+};
+
 export default makeReducer(INITIAL_STATE, reducer)

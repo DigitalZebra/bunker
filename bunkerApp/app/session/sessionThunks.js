@@ -1,7 +1,7 @@
 import {login} from '../user/userReducer'
 import {managerSignIn, setupGoogleSignin, signOut} from './BunkerSessionManager'
 import {getBunkerSessionCookie, saveBunkerSession} from './BunkerSessionStore'
-import {connectToServer, sendSocketIoMessage} from './socketio'
+import {connectToServer, sendSocketIoMessage, disconnectFromServer} from './socketio'
 
 export const createAndConnectWebSocket = async (dispatch) => {
 	// first need to get the cookie so we can pass it down to the socket.
@@ -44,8 +44,8 @@ export const fetchInitData = dispatch => {
 		})
 };
 
-export const signUserOut = async (dispatch) => {
+export const signUserOut = () => async (dispatch) => {
+	disconnectFromServer();
 	await signOut();
-	// TODO: dispatch signout action.
-	dispatch({});
+	dispatch({type: 'user/signOut'});
 };
