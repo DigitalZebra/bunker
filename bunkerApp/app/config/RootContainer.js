@@ -16,17 +16,26 @@ class RootContainer extends React.PureComponent {
 		this.props.initializeSignIn()
 	}
 
+	renderSignOnScreen() {
+		const {signIn} = this.props;
+
+		return <View style={styles.signOnView}>
+			<Text style={styles.bunker}>BUNKER</Text>
+			<GoogleSigninButton
+			style={{width: 212, height: 48}}
+			size={GoogleSigninButton.Size.Standard}
+			color={GoogleSigninButton.Color.Auto}
+			onPress={() => signIn()} />
+		</View>
+	}
+
 	render() {
-		const {loggedInUser, signIn} = this.props
+		const {loggedInUser} = this.props
 
 		return <View style={styles.applicationView}>
 			<StatusBar barStyle="light-content" />
 			{loggedInUser && <AppNavigator/>}
-			{!loggedInUser && <GoogleSigninButton
-				style={{width: 212, height: 48}}
-				size={GoogleSigninButton.Size.Standard}
-				color={GoogleSigninButton.Color.Auto}
-				onPress={() => signIn()}/>}
+			{!loggedInUser && this.renderSignOnScreen()}
 		</View>
 	}
 }
@@ -34,6 +43,16 @@ class RootContainer extends React.PureComponent {
 const styles = StyleSheet.create({
 	applicationView: {
 		flex: 1
+	},
+	signOnView: {
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	bunker: {
+		fontSize: 24,
+		marginBottom: 20
 	}
 })
 
